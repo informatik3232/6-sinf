@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elektron darslik - 6-sinf (AKT)</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f6f9;
+    color: #1a1a1a;
+    font-size: 18px;
+  }
+  /* ===== Yuqori sarlavha ===== */
+  header.top {
+    background: #1d4ed8;
+    color: #fff;
+    padding: 16px 20px;
+    font-size: 24px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  header.top .ism-blok {
+    font-size: 16px;
+    font-weight: normal;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  header.top input {
+    font-size: 16px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: none;
+    width: 180px;
+  }
+
+  /* ===== Asosiy joylashuv: chap menyu + o'ng kontent ===== */
+  .wrap {
+    display: flex;
+    min-height: calc(100vh - 70px);
+  }
+  nav.sidebar {
+    width: 320px;
+    min-width: 260px;
+    background: #ffffff;
+    border-right: 3px solid #d1d5db;
+    padding: 10px;
+    overflow-y: auto;
+    max-height: calc(100vh - 70px);
+  }
+  nav.sidebar .sem-label {
+    background: #16a34a;
+    color: #fff;
+    font-weight: bold;
+    padding: 8px 10px;
+    border-radius: 6px;
+    margin: 14px 0 8px 0;
+    font-size: 17px;
+    text-align: center;
+  }
+  nav.sidebar button.dars-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: #eef2ff;
+    border: 2px solid #c7d2fe;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    color: #1e293b;
+    line-height: 1.3;
+  }
+  nav.sidebar button.dars-btn:hover {
+    background: #dbeafe;
+  }
+  nav.sidebar button.dars-btn.active {
+    background: #1d4ed8;
+    color: #fff;
+    border-color: #1d4ed8;
+  }
+  nav.sidebar button.dars-btn.assess {
+    background: #fef3c7;
+    border-color: #fbbf24;
+  }
+  nav.sidebar button.dars-btn.assess.active {
+    background: #b45309;
+    border-color: #b45309;
+    color: #fff;
+  }
+
+  main.content {
+    flex: 1;
+    padding: 24px 32px;
+    overflow-y: auto;
+    max-height: calc(100vh - 70px);
+  }
+  main.content h2 {
+    font-size: 28px;
+    color: #1d4ed8;
+    margin-top: 0;
+    border-bottom: 4px solid #1d4ed8;
+    padding-bottom: 10px;
+  }
+  .ders-matn {
+    background: #fff;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 20px 24px;
+    font-size: 19px;
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+  .ders-matn ol, .ders-matn ul {
+    padding-left: 26px;
+  }
+  .ders-matn li { margin-bottom: 6px; }
+  code {
+    background: #f1f5f9;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 17px;
+  }
+
+  /* ===== Test bo'limi ===== */
+  .test-blok {
+    background: #fff;
+    border: 2px solid #c7d2fe;
+    border-radius: 10px;
+    padding: 20px 24px;
+  }
+  .test-blok h3 {
+    color: #1d4ed8;
+    font-size: 22px;
+    margin-top: 0;
+  }
+  .savol {
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .savol p.q-text {
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+  .savol label {
+    display: block;
+    padding: 8px 10px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    font-size: 17px;
+  }
+  .savol label:hover { background: #f8fafc; }
+  .savol input[type=radio] { margin-right: 10px; transform: scale(1.3); }
+
+  button.asosiy-btn {
+    background: #16a34a;
+    color: #fff;
+    border: none;
+    padding: 14px 26px;
+    font-size: 19px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  button.asosiy-btn:disabled {
+    background: #94a3b8;
+    cursor: not-allowed;
+  }
+
+  .natija-xabar {
+    margin-top: 14px;
+    padding: 14px 18px;
+    border-radius: 8px;
+    font-size: 19px;
+    font-weight: bold;
+  }
+  .natija-ok { background: #dcfce7; color: #166534; border: 2px solid #16a34a; }
+  .natija-yomon { background: #fee2e2; color: #991b1b; border: 2px solid #dc2626; }
+  .xato-xabar {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 2px solid #dc2626;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-top: 12px;
+    font-size: 16px;
+  }
+
+  /* ===== Tarix jadvali ===== */
+  .tarix-blok {
+    background: #fff;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-top: 24px;
+  }
+  .tarix-blok h3 { color: #1d4ed8; margin-top: 0; }
+  table.tarix-jadval {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16px;
+  }
+  table.tarix-jadval th, table.tarix-jadval td {
+    border: 1px solid #e2e8f0;
+    padding: 8px 10px;
+    text-align: left;
+  }
+  table.tarix-jadval th { background: #f1f5f9; }
+
+  footer.pastki {
+    text-align: center;
+    padding: 16px;
+    font-size: 15px;
+    color: #64748b;
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div>Elektron darslik — 6-sinf (AKT va dasturiy vositalar)</div>
+  <div class="ism-blok">
+    <label for="oquvchiIsm">Ismingiz:</label>
+    <input type="text" id="oquvchiIsm" placeholder="Ism Familiya">
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="sidebar" id="sidebar"></nav>
+  <main class="content" id="content">
+    <h2>Xush kelibsiz!</h2>
+    <div class="ders-matn">
+      <p>Chap tomondagi menyudan darsni tanlang. Har bir darsda qisqa tushuntirish va oxirida kichik test bor.</p>
+      <p>Avval ismingizni yuqoridagi maydonga yozing — shunda test natijalaringiz saqlanadi.</p>
+    </div>
+    <div class="tarix-blok">
+      <h3>Natijalar tarixi</h3>
+      <div id="tarixKontent">Yuklanmoqda...</div>
+    </div>
+  </main>
+</div>
+
+<footer class="pastki">6-sinf elektron darsligi &mdash; sodda va tushunarli o'quv vositasi</footer>
+
+<!-- ======================================================================
+  SUPABASE UCHUN TAYYOR SQL (buni Supabase loyihangizdagi "SQL Editor" ga
+  nusxalab, "RUN" tugmasini bosing):
+
+  -- 1) Natijalar jadvalini yaratish
+  create table if not exists natijalar (
+    id bigint generated by default as identity primary key,
+    created_at timestamptz not null default now(),
+    ism text not null,
+    mavzu text not null,
+    togri_javoblar int not null,
+    jami_savollar int not null
+  );
+
+  -- 2) Row Level Security (RLS) ni yoqish
+  alter table natijalar enable row level security;
+
+  -- 3) anon (hammaga ochiq) rol uchun YOZISH (insert) siyosati
+  create policy "anon_insert_natijalar"
+  on natijalar
+  for insert
+  to anon
+  with check (true);
+
+  -- 4) anon rol uchun O'QISH (select) siyosati
+  create policy "anon_select_natijalar"
+  on natijalar
+  for select
+  to anon
+  using (true);
+
+====================================================================== -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// ========= 1-QADAM: Supabase ulanish ma'lumotlari =========
+const SUPABASE_URL = "https://SIZNING-PROJECT-ID.supabase.co"; // <-- bu yerga o'z qiymatlaringizni qo'ying
+const SUPABASE_ANON_KEY = "SIZNING-ANON-KEY"; // <-- bu yerga o'z qiymatlaringizni qo'ying
+
+let supabaseClient = null;
+try {
+  supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+} catch (e) {
+  console.log("Supabase mijozini yaratishda xato:", e);
+}
+
+// Tarmoq sekin bo'lsa dastur qotib qolmasligi uchun timeout bilan so'rov yuborish
+function vaqtChegarasiBilan(promiseVazifa, millisekund) {
+  return Promise.race([
+    promiseVazifa,
+    new Promise((_, rad) =>
+      setTimeout(() => rad(new Error("Server javob bermadi (vaqt tugadi). Internetni tekshiring.")), millisekund)
+    )
+  ]);
+}
+
+// ========= 2-QADAM: Darslar ma'lumoti (JSON) =========
+const DARSLAR = [{"id": 1, "sem": 1, "title": "Matn stillarini sozlash va ulardan foydalanish", "content": "<p><b>Stil (Style)</b> — matnga oldindan tayyorlangan ko'rinish (shrift, o'lcham, rang) beradigan vositadir.</p>\n<p>Word dasturida sarlavha, kichik sarlavha va oddiy matn uchun maxsus stillar mavjud. Masalan: <i>Heading 1</i>, <i>Heading 2</i>, <i>Normal</i>.</p>\n<ol>\n<li>Matnni belgilang (tanlang).</li>\n<li><b>Home</b> bo'limidagi <b>Styles</b> (Stillar) oynasidan kerakli stilni tanlang.</li>\n<li>Matn avtomatik ravishda o'sha stil ko'rinishiga o'tadi.</li>\n</ol>\n<p><b>Nega kerak?</b> Stillar yordamida hujjat chiroyli, tartibli va bir xil ko'rinishda bo'ladi. Shuningdek, \"Mundarija\" (Table of Contents) avtomatik yaratilishi uchun ham sarlavha stillari ishlatiladi.</p>", "quiz": [{"q": "Stil (Style) nima uchun ishlatiladi?", "o": ["Matnga tayyor ko'rinish berish uchun", "Faylni o'chirish uchun", "Kompyuterni o'chirish uchun"], "a": 0}, {"q": "Stillarni qayerdan tanlash mumkin?", "o": ["Insert bo'limidan", "Home bo'limidagi Styles oynasidan", "Print tugmasidan"], "a": 1}, {"q": "Sarlavhalar uchun qaysi stil ishlatiladi?", "o": ["Normal", "Heading 1", "Footer"], "a": 1}], "assess": false}, {"id": 2, "sem": 1, "title": "Wrap text sozlamalaridan foydalanish. Tasvirni qirqish va o'lchamini o'zgartirish", "content": "<p><b>Wrap Text</b> — rasm atrofida matnning qanday joylashishini belgilaydigan funksiya.</p>\n<p>Rasmni hujjatga qo'yganingizda, matn uni \"qoplab\" turishi yoki atrofidan aylanib o'tishi mumkin. Buning uchun:</p>\n<ol>\n<li>Rasmni bosing (tanlang).</li>\n<li><b>Picture Format</b> bo'limidan <b>Wrap Text</b> tugmasini bosing.</li>\n<li>Kerakli variantni tanlang: masalan <i>Square</i> (kvadrat), <i>Tight</i> (yopishiq), <i>Behind Text</i> (matn ortida).</li>\n</ol>\n<p><b>Tasvirni qirqish (Crop)</b> — rasmning keraksiz qismini olib tashlash. <b>Picture Format → Crop</b> tugmasini bosib, rasm chetidagi chiziqlarni torting.</p>\n<p><b>O'lchamini o'zgartirish</b> uchun rasm burchagidagi kichik doiracha yoki kvadratchani sichqoncha bilan tortib kattalashtirish yoki kichraytirish mumkin.</p>", "quiz": [{"q": "Wrap Text funksiyasi nima uchun kerak?", "o": ["Rasmni o'chirish uchun", "Matn va rasmning joylashishini sozlash uchun", "Faylni saqlash uchun"], "a": 1}, {"q": "Rasmning keraksiz qismini olib tashlash qaysi buyruq orqali bajariladi?", "o": ["Crop", "Save", "Print"], "a": 0}, {"q": "Rasm o'lchamini o'zgartirish uchun nima qilish kerak?", "o": ["Klaviaturani bosish", "Rasm burchagini sichqoncha bilan tortish", "Faylni yopish"], "a": 1}], "assess": false}, {"id": 3, "sem": 1, "title": "Jadval o'rnatish", "content": "<p>Jadval — ma'lumotlarni qator va ustunlarga bo'lib, tartibli ko'rinishda joylashtirish usuli.</p>\n<ol>\n<li><b>Insert</b> bo'limiga o'ting.</li>\n<li><b>Table</b> tugmasini bosing.</li>\n<li>Kerakli qator va ustunlar sonini belgilab, sichqoncha bilan tortib tanlang yoki <i>Insert Table</i> orqali sonini kiriting.</li>\n</ol>\n<p>Jadval hosil bo'lgach, har bir katakchaga (yacheykaga) matn yoki son yozish mumkin. Qator va ustun qo'shish yoki o'chirish uchun jadval ichida sichqonchaning o'ng tugmasini bosib, mos buyruqni tanlang.</p>\n<p><b>Misol:</b> Sinf jadvali, dars jadvali, narxlar ro'yxati — bularning barchasi jadval yordamida tuziladi.</p>", "quiz": [{"q": "Jadval qaysi bo'limdan qo'yiladi?", "o": ["Insert", "View", "Review"], "a": 0}, {"q": "Jadvaldagi bitta katakcha nima deb ataladi?", "o": ["Yacheyka", "Sarlavha", "Stil"], "a": 0}, {"q": "Jadvalga qator qo'shish uchun nima qilish kerak?", "o": ["Faylni o'chirish", "O'ng tugma bosib, qator qo'shish buyrug'ini tanlash", "Kompyuterni qayta yuklash"], "a": 1}], "assess": false}, {"id": 4, "sem": 1, "title": "Belgili ro'yxat yaratish", "content": "<p><b>Belgili ro'yxat (Bullet list)</b> — ro'yxat elementlari oldiga nuqta, aylana yoki boshqa belgi qo'yib tartiblash usuli.</p>\n<ol>\n<li>Ro'yxat qilinadigan matnlarni belgilang.</li>\n<li><b>Home</b> bo'limidagi <b>Bullets</b> tugmasini bosing.</li>\n<li>Kerakli belgi turini (nuqta, aylana, kvadrat) tanlang.</li>\n</ol>\n<p>Agar ro'yxat elementlari tartib raqamiga ega bo'lishi kerak bo'lsa (1, 2, 3...), <b>Numbering</b> tugmasidan foydalaniladi.</p>\n<p><b>Misol:</b> Xarid ro'yxati, vazifalar ro'yxati, mavzular ro'yxati.</p>", "quiz": [{"q": "Belgili ro'yxat qaysi tugma orqali yaratiladi?", "o": ["Bullets", "Print", "Save"], "a": 0}, {"q": "Raqamli ro'yxat uchun qaysi tugma ishlatiladi?", "o": ["Numbering", "Crop", "Header"], "a": 0}, {"q": "Belgili ro'yxat nima uchun ishlatiladi?", "o": ["Rasmni kattalashtirish uchun", "Ro'yxatni tartibli ko'rsatish uchun", "Faylni saqlash uchun"], "a": 1}], "assess": false}, {"id": 5, "sem": 1, "title": "Hujjatga Header va Footer maydonlarini qo'shish", "content": "<p><b>Header</b> — sahifaning yuqori qismidagi, <b>Footer</b> — pastki qismidagi takrorlanadigan maydon. Bu yerga sahifa raqami, sana, muallif nomi yoki hujjat nomini yozish mumkin.</p>\n<ol>\n<li><b>Insert</b> bo'limiga o'ting.</li>\n<li><b>Header</b> yoki <b>Footer</b> tugmasini bosing.</li>\n<li>Tayyor shablonlardan birini tanlang yoki bo'sh joyga o'zingiz matn yozing.</li>\n<li>Tugatgach, <b>Close Header and Footer</b> tugmasini bosing.</li>\n</ol>\n<p><b>Foydasi:</b> Header va Footer barcha sahifalarda avtomatik takrorlanadi, shuning uchun har bir sahifaga alohida yozish shart emas.</p>", "quiz": [{"q": "Header sahifaning qaysi qismida joylashadi?", "o": ["Yuqori qismida", "Pastki qismida", "O'rtasida"], "a": 0}, {"q": "Footer odatda nima uchun ishlatiladi?", "o": ["Rasm chizish uchun", "Sahifa raqami yoki sana kabi ma'lumot uchun", "Faylni o'chirish uchun"], "a": 1}, {"q": "Header va Footer qaysi bo'limdan qo'shiladi?", "o": ["Insert", "Review", "Design"], "a": 0}], "assess": false}, {"id": 6, "sem": 1, "title": "Matnni ustunlarga bo'lish", "content": "<p>Matnni bir necha ustunga bo'lish — gazeta yoki jurnal sahifalariga o'xshash ko'rinish beradi.</p>\n<ol>\n<li>Ustunlarga bo'linishi kerak bo'lgan matnni belgilang.</li>\n<li><b>Layout</b> bo'limiga o'ting.</li>\n<li><b>Columns</b> tugmasini bosing.</li>\n<li>Kerakli ustunlar sonini (2, 3 va h.k.) tanlang.</li>\n</ol>\n<p><b>Misol:</b> Gazeta, buklet yoki e'lon tayyorlashda matn odatda 2 yoki 3 ustunga bo'linadi.</p>", "quiz": [{"q": "Matnni ustunlarga bo'lish qaysi bo'limdan amalga oshiriladi?", "o": ["Layout", "Insert", "Home"], "a": 0}, {"q": "Ustunlarga bo'lingan matn ko'proq qaysi hujjatlarda ishlatiladi?", "o": ["Gazeta va buklet", "Rasm", "Video"], "a": 0}, {"q": "Columns tugmasi nima qiladi?", "o": ["Matnni o'chiradi", "Matnni ustunlarga bo'ladi", "Rasmni kattalashtiradi"], "a": 1}], "assess": false}, {"id": 7, "sem": 1, "title": "Sahifani formatlash buyruqlaridan foydalanish. Print preview buyrug'idan foydalanish", "content": "<p><b>Sahifani formatlash</b> — sahifa o'lchami, yo'nalishi (gorizontal/vertikal) va chekka (margin) masofalarini sozlash.</p>\n<ol>\n<li><b>Layout</b> bo'limiga o'ting.</li>\n<li><b>Size</b> — sahifa o'lchamini (A4, A5...) tanlash uchun.</li>\n<li><b>Orientation</b> — <i>Portrait</i> (vertikal) yoki <i>Landscape</i> (gorizontal) tanlash uchun.</li>\n<li><b>Margins</b> — sahifa chekkalaridagi bo'sh joyni sozlash uchun.</li>\n</ol>\n<p><b>Print Preview</b> — hujjatni chop etishdan oldin qanday ko'rinishda chiqishini ekranda ko'rish imkonini beradi. Buning uchun <b>File → Print</b> bo'limiga o'ting — o'ng tomonda hujjatning oldindan ko'rinishi chiqadi.</p>\n<p><b>Nega muhim?</b> Chop etishdan oldin xatolarni (joylashuv, chegaralar) tekshirib, qog'ozni behuda sarflamaslik mumkin.</p>", "quiz": [{"q": "Sahifa yo'nalishini o'zgartirish uchun qaysi buyruq ishlatiladi?", "o": ["Orientation", "Bullets", "Header"], "a": 0}, {"q": "Print Preview nima uchun kerak?", "o": ["Hujjatni chop etishdan oldin ko'rish uchun", "Faylni o'chirish uchun", "Rasm chizish uchun"], "a": 0}, {"q": "Margins nimani anglatadi?", "o": ["Sahifa chekkasidagi bo'sh joy", "Shrift o'lchami", "Rasm rangi"], "a": 0}], "assess": false}, {"id": 8, "sem": 1, "title": "Amaliy mashg'ulot: Internetdan foydalanish jarayonida xavfsizlikni ta'minlash", "content": "<p>Internetdan foydalanganda xavfsizlik qoidalariga rioya qilish juda muhim:</p>\n<ul>\n<li>Shaxsiy ma'lumotlaringizni (manzil, telefon raqami, parol) notanish shaxslarga bermang.</li>\n<li>Kuchli parollardan foydalaning va ularni hech kimga aytmang.</li>\n<li>Notanish havolalar (linklar) va yuklamalarni ochmang — ular viruslar yoki firibgarlik bo'lishi mumkin.</li>\n<li>Ijtimoiy tarmoqlarda notanish odamlar bilan ehtiyotkorlik bilan muloqot qiling.</li>\n<li>Har qanday shubhali holatda katta odamlarga (ota-ona, o'qituvchi) murojaat qiling.</li>\n</ul>\n<p><b>Xulosa:</b> Internet foydali vosita, lekin undan foydalanganda ehtiyotkor va ongli bo'lish kerak.</p>", "quiz": [{"q": "Shaxsiy ma'lumotlarni kimga berish mumkin?", "o": ["Notanish shaxslarga", "Hech kimga, faqat ishonchli odamlarga", "Barcha saytlarga"], "a": 1}, {"q": "Notanish havola kelganda nima qilish kerak?", "o": ["Darhol ochish", "Ochmaslik va ehtiyot bo'lish", "Do'stlarga yuborish"], "a": 1}, {"q": "Shubhali holat yuz berganda nima qilish kerak?", "o": ["Hech kimga aytmaslik", "Ota-ona yoki o'qituvchiga murojaat qilish", "Parolni almashtirmaslik"], "a": 1}], "assess": false}, {"id": 9, "sem": 1, "title": "BSB-1 [50 ball]", "content": "<p>Bu dars <b>Bo'limlar bo'yicha summativ baholash (BSB-1)</b> darsidir. 1 — 8-darslarda o'rganilgan Word dasturi mavzulari (stillar, rasm, jadval, ro'yxat, Header/Footer, ustunlar, sahifa formatlash, internet xavfsizligi) bo'yicha bilimingiz baholanadi.</p><p>O'qituvchingiz sizga maxsus topshiriqnoma beradi. Quyida shu mavzular bo'yicha qisqa takroriy test berilgan — tayyorgarlik uchun yeching.</p>", "quiz": [{"q": "Matnga tayyor ko'rinish beruvchi vosita qanday ataladi?", "o": ["Stil", "Jadval", "Footer"], "a": 0}, {"q": "Sahifaning yuqori qismidagi takrorlanuvchi maydon nima deyiladi?", "o": ["Footer", "Header", "Margin"], "a": 1}, {"q": "Hujjatni chop etishdan oldin ko'rish uchun qaysi funksiya ishlatiladi?", "o": ["Print Preview", "Crop", "Wrap Text"], "a": 0}, {"q": "Internetda shaxsiy ma'lumotlarni qanday himoya qilish kerak?", "o": ["Hammaga bo'lishish", "Hech kimga bermaslik", "Ijtimoiy tarmoqqa yozish"], "a": 1}], "assess": true}, {"id": 10, "sem": 1, "title": "Loyiha xususiyatini ishlab chiqish", "content": "<p>PowerPoint'da taqdimot (prezentatsiya) tayyorlashdan oldin, uning <b>loyiha xususiyatlarini</b> — ya'ni mavzusini, maqsadini, dizaynini va tuzilishini aniq belgilab olish kerak.</p>\n<ol>\n<li><b>Design</b> bo'limiga o'ting.</li>\n<li>Tayyor mavzulardan (Theme) birini tanlang — bu barcha slaydlarga bir xil rang va shrift uslubini beradi.</li>\n<li>Slayd o'lchami va fonini kerak bo'lsa <b>Format Background</b> orqali sozlang.</li>\n</ol>\n<p><b>Nega muhim?</b> Yaxshi tayyorlangan loyiha prezentatsiyani chiroyli va bir xil uslubda ko'rsatadi, auditoriyaga tushunarli bo'ladi.</p>", "quiz": [{"q": "PowerPoint'da tayyor dizayn uslubi qanday ataladi?", "o": ["Theme", "Header", "Column"], "a": 0}, {"q": "Theme (mavzu) ni tanlash qaysi bo'limdan amalga oshiriladi?", "o": ["Design", "Review", "Insert"], "a": 0}, {"q": "Loyiha xususiyatlarini aniqlashning foydasi nima?", "o": ["Prezentatsiya bir xil va chiroyli bo'ladi", "Fayl tezroq ochiladi", "Kompyuter tezlashadi"], "a": 0}], "assess": false}, {"id": 11, "sem": 1, "title": "Slaydga o'tish effektlarini qo'shish", "content": "<p><b>O'tish effekti (Transition)</b> — bir slayddan ikkinchi slaydga o'tishdagi vizual effekt (masalan, aylanish, so'nish, siljish).</p>\n<ol>\n<li>Effekt qo'shmoqchi bo'lgan slaydni tanlang.</li>\n<li><b>Transitions</b> bo'limiga o'ting.</li>\n<li>Ro'yxatdan kerakli effektni (masalan <i>Fade</i>, <i>Push</i>, <i>Wipe</i>) tanlang.</li>\n<li><b>Effect Options</b> orqali effekt yo'nalishini sozlash mumkin.</li>\n</ol>\n<p><b>Maslahat:</b> Bitta prezentatsiyada juda ko'p xil effektlardan foydalanmang — bu diqqatni chalg'itadi.</p>", "quiz": [{"q": "Transition nima?", "o": ["Slaydlar orasidagi o'tish effekti", "Matn rangi", "Jadval turi"], "a": 0}, {"q": "Transitions bo'limi qayerda joylashgan?", "o": ["Insert", "Transitions", "Review"], "a": 1}, {"q": "Ko'p xil effekt ishlatish nega tavsiya etilmaydi?", "o": ["Fayl og'irlashadi", "Diqqatni chalg'itadi", "Printer ishlamay qoladi"], "a": 1}], "assess": false}, {"id": 12, "sem": 1, "title": "Slaydlarga vaqt va audio qo'shish", "content": "<p>Slaydlar avtomatik almashishi uchun ularga <b>vaqt (timing)</b> belgilash mumkin, shuningdek fon musiqasi yoki ovoz (<b>audio</b>) qo'shish mumkin.</p>\n<ol>\n<li><b>Transitions</b> bo'limida <b>Advance Slide</b> ostida <i>After</i> belgisini qo'yib, soniya kiriting — slayd shu vaqtdan so'ng avtomatik o'tadi.</li>\n<li>Audio qo'shish uchun <b>Insert → Audio</b> bo'limiga o'ting va fayl yoki yozuvni tanlang.</li>\n<li>Ovoz sozlamalarini <b>Playback</b> bo'limida (masalan, barcha slaydlarda ijro etish) belgilash mumkin.</li>\n</ol>", "quiz": [{"q": "Slaydni avtomatik o'tkazish uchun qaysi sozlama ishlatiladi?", "o": ["Advance Slide - After", "Header", "Wrap Text"], "a": 0}, {"q": "Audio qo'shish qaysi bo'limdan amalga oshiriladi?", "o": ["Insert", "Review", "Layout"], "a": 0}, {"q": "Ovoz sozlamalari qaysi bo'limda joylashgan?", "o": ["Playback", "Design", "Columns"], "a": 0}], "assess": false}, {"id": 13, "sem": 1, "title": "Animatsiya effektini qo'shish", "content": "<p><b>Animatsiya</b> — slayddagi matn yoki obyektning paydo bo'lishi, harakatlanishi yoki yo'qolishidagi effekt.</p>\n<ol>\n<li>Animatsiya qo'shiladigan obyektni (matn, rasm) tanlang.</li>\n<li><b>Animations</b> bo'limiga o'ting.</li>\n<li>Kerakli effektni tanlang: <i>Entrance</i> (paydo bo'lish), <i>Emphasis</i> (ta'kidlash), <i>Exit</i> (yo'qolish).</li>\n</ol>\n<p><b>Farqi Transition'dan:</b> Transition — slaydlar orasidagi effekt, Animatsiya esa bitta slayd ichidagi obyektlarga qo'llaniladi.</p>", "quiz": [{"q": "Animatsiya nimaga qo'llaniladi?", "o": ["Slaydlar orasiga", "Slayd ichidagi obyektlarga", "Faylga"], "a": 1}, {"q": "Obyekt paydo bo'lish effekti qanday ataladi?", "o": ["Entrance", "Exit", "Emphasis"], "a": 0}, {"q": "Animatsiya va Transition o'rtasidagi farq nima?", "o": ["Farqi yo'q", "Animatsiya obyektga, Transition slaydlar orasiga qo'llanadi", "Animatsiya faqat rangga tegishli"], "a": 1}], "assess": false}, {"id": 14, "sem": 1, "title": "Animatsiya va vaqtni moslash", "content": "<p>Bir nechta animatsiya qo'shilganda, ularning <b>ketma-ketligi va vaqtini</b> sozlash kerak bo'ladi.</p>\n<ol>\n<li><b>Animations</b> bo'limida <b>Animation Pane</b> ni oching — barcha animatsiyalar ro'yxati ko'rinadi.</li>\n<li>Har bir animatsiya uchun <b>Start</b> (boshlanish): <i>On Click</i> (bosilganda), <i>With Previous</i> (avvalgisi bilan birga), <i>After Previous</i> (avvalgisidan keyin) variantlarini tanlash mumkin.</li>\n<li><b>Duration</b> (davomiyligi) va <b>Delay</b> (kechikish) vaqtini sozlang.</li>\n</ol>\n<p>Bu orqali prezentatsiya izchil va tushunarli tarzda namoyish etiladi.</p>", "quiz": [{"q": "Barcha animatsiyalar ro'yxatini ko'rish uchun qaysi panel ishlatiladi?", "o": ["Animation Pane", "Header Pane", "Style Pane"], "a": 0}, {"q": "'On Click' nimani anglatadi?", "o": ["Avtomatik boshlanish", "Sichqoncha bosilganda boshlanish", "Hech qachon boshlanmaslik"], "a": 1}, {"q": "Animatsiya davomiyligini sozlovchi sozlama qanday ataladi?", "o": ["Duration", "Margin", "Theme"], "a": 0}], "assess": false}, {"id": 15, "sem": 1, "title": "CHSB-1 [40 ball]", "content": "<p>Bu dars <b>Chorak summativ baholash (CHSB-1)</b> darsidir. 1-chorakda o'rganilgan barcha mavzular (Word va PowerPoint) bo'yicha bilimingiz baholanadi.</p><p>Quyida qisqa takroriy test berilgan — tayyorgarlik uchun yeching.</p>", "quiz": [{"q": "PowerPoint'da slaydlar orasidagi effekt qanday ataladi?", "o": ["Transition", "Style", "Margin"], "a": 0}, {"q": "Slayd ichidagi obyektga qo'llaniladigan effekt nima deyiladi?", "o": ["Animatsiya", "Header", "Footer"], "a": 0}, {"q": "Word'da matnni nuqta bilan ro'yxatlash qanday ataladi?", "o": ["Bullet list", "Table", "Crop"], "a": 0}, {"q": "Hujjat sahifasini chop etishdan oldin ko'rish nima deyiladi?", "o": ["Print Preview", "Wrap Text", "Theme"], "a": 0}], "assess": true}, {"id": 16, "sem": 1, "title": "Auditoriya va maqsadni bilish", "content": "<p>Har qanday taqdimot (yoki hujjat) tayyorlashdan oldin ikkita muhim savolga javob berish kerak:</p>\n<ul>\n<li><b>Auditoriya kim?</b> — Taqdimotni kim tinglaydi? (sinfdoshlar, o'qituvchilar, kichik bolalar va h.k.)</li>\n<li><b>Maqsad nima?</b> — Nima uchun bu taqdimot tayyorlanmoqda? (o'qitish, tanishtirish, ishontirish uchunmi?)</li>\n</ul>\n<p>Auditoriya va maqsadga qarab, taqdimotning tili, rasmlari, uzunligi va uslubi tanlanadi. Masalan, kichik bolalar uchun taqdimotda ko'proq rasm va sodda so'zlar, kattalar uchun esa ko'proq ma'lumot va grafiklar bo'lishi mumkin.</p>", "quiz": [{"q": "Taqdimot tayyorlashdan oldin nimani aniqlash kerak?", "o": ["Faqat rangni", "Auditoriya va maqsadni", "Faqat shriftni"], "a": 1}, {"q": "Auditoriya deganda nima tushuniladi?", "o": ["Taqdimotni tinglovchilar", "Kompyuter dasturi", "Fayl nomi"], "a": 0}, {"q": "Nega maqsadni aniqlash muhim?", "o": ["Taqdimot uslubini to'g'ri tanlash uchun", "Kompyuterni tezlashtirish uchun", "Faylni kichraytirish uchun"], "a": 0}], "assess": false}, {"id": 17, "sem": 2, "title": "Elektron jadvalni loyihalash. Dizayn shakllantirish", "content": "<p><b>Elektron jadval (Excel)</b> — sonli va matnli ma'lumotlarni qator (row) va ustunlarga (column) joylashtirib, hisob-kitob qilish dasturi.</p>\n<p>Jadvalni loyihalashdan oldin quyidagilarni aniqlang:</p>\n<ol>\n<li>Qanday ma'lumotlar kiritiladi? (ustun sarlavhalari)</li>\n<li>Qancha qator va ustun kerak?</li>\n<li>Dizayn: sarlavhalarni qalin shrift bilan ajratish, ranglar bilan formatlash.</li>\n</ol>\n<p><b>Misol:</b> Sinf jurnali uchun jadval — ustunlar: F.I.Sh., fan nomi, baholar.</p>", "quiz": [{"q": "Excel dasturi nima uchun ishlatiladi?", "o": ["Rasm chizish uchun", "Hisob-kitob va ma'lumotlarni jadval ko'rinishida saqlash uchun", "Video ko'rish uchun"], "a": 1}, {"q": "Jadvalda gorizontal qator nima deyiladi?", "o": ["Row", "Column", "Cell"], "a": 0}, {"q": "Jadvalni loyihalashdan oldin nimani aniqlash kerak?", "o": ["Qaysi ustunlar kerakligini", "Faylni qayerga saqlashni", "Kompyuter rangini"], "a": 0}], "assess": false}, {"id": 18, "sem": 2, "title": "Formulani kiritish. Elektron jadvalni sinovdan o'tkazish", "content": "<p><b>Formula</b> — Excelda hisob-kitob qilish uchun ishlatiladigan ifoda. Har bir formula <b>=</b> (teng) belgisidan boshlanadi.</p>\n<p><b>Misol:</b> <code>=A1+B1</code> — A1 va B1 katakchalaridagi sonlarni qo'shadi. <code>=SUM(A1:A10)</code> — A1 dan A10 gacha bo'lgan sonlarni yig'adi.</p>\n<ol>\n<li>Natija chiqishi kerak bo'lgan katakchani tanlang.</li>\n<li><b>=</b> belgisini yozing.</li>\n<li>Formulani kiriting va <b>Enter</b> bosing.</li>\n</ol>\n<p><b>Sinovdan o'tkazish:</b> Formula to'g'ri ishlayotganini tekshirish uchun qiymatlarni o'zgartirib ko'ring — natija ham avtomatik o'zgarishi kerak.</p>", "quiz": [{"q": "Excelda formula qaysi belgidan boshlanadi?", "o": ["=", "+", "#"], "a": 0}, {"q": "=SUM(A1:A10) formulasi nima qiladi?", "o": ["Sonlarni ko'paytiradi", "A1 dan A10 gacha sonlarni yig'adi", "Katakchani o'chiradi"], "a": 1}, {"q": "Formulani sinovdan o'tkazish uchun nima qilish kerak?", "o": ["Qiymatlarni o'zgartirib natijani tekshirish", "Faylni o'chirish", "Kompyuterni qayta yuklash"], "a": 0}], "assess": false}, {"id": 19, "sem": 2, "title": "Modellashtirish", "content": "<p><b>Modellashtirish</b> — haqiqiy hayotdagi vaziyatni (masalan, oilaviy byudjet, do'kon savdosi) elektron jadval orqali formulalar yordamida tasvirlash.</p>\n<p>Modellashtirish qadamlari:</p>\n<ol>\n<li>Qaysi vaziyat modellashtirilishini aniqlang.</li>\n<li>Kerakli ma'lumotlarni (o'zgaruvchilarni) jadvalga joylashtiring.</li>\n<li>Formulalar yordamida ular orasidagi bog'liqlikni ifodalang.</li>\n<li>Qiymatlarni o'zgartirib, natija qanday o'zgarishini kuzating (\"Nima bo'ladi, agar...?\" savoliga javob toping).</li>\n</ol>\n<p><b>Misol:</b> Agar narx 10% ga oshsa, umumiy xarajat qanday o'zgaradi — buni modellashtirish orqali bilish mumkin.</p>", "quiz": [{"q": "Modellashtirish nima uchun kerak?", "o": ["Haqiqiy vaziyatni jadvalda tasvirlash uchun", "Faylni rangli qilish uchun", "Kompyuterni tezlashtirish uchun"], "a": 0}, {"q": "Modellashtirishda qaysi savolga javob izlanadi?", "o": ["Nima bo'ladi, agar...?", "Qanday o'chiriladi?", "Fayl qancha og'ir?"], "a": 0}, {"q": "Modelni tuzishda nimadan foydalaniladi?", "o": ["Formulalardan", "Rasmlardan", "Videolardan"], "a": 0}], "assess": false}, {"id": 20, "sem": 2, "title": "Ma'lumotlarni to'plash shaklini tuzish", "content": "<p>Ma'lumotlarni yig'ishdan oldin, ularni qanday tartibda kiritish kerakligini ko'rsatuvchi <b>shakl (forma)</b> tuziladi.</p>\n<ol>\n<li>Qaysi ma'lumotlar kerakligini aniqlang (masalan: ism, yosh, sinf).</li>\n<li>Har bir ma'lumot uchun ustun sarlavhasini yarating.</li>\n<li>Ustun sarlavhalarini qalin va aniq yozing, kerak bo'lsa rang bilan ajrating.</li>\n</ol>\n<p><b>Misol:</b> O'quvchilarning sport natijalarini yig'ish uchun jadval: F.I.Sh. | Yugurish vaqti | Sakrash uzunligi.</p>", "quiz": [{"q": "Ma'lumot to'plash shaklini tuzishdan oldin nima qilish kerak?", "o": ["Kerakli ma'lumotlarni aniqlash", "Kompyuterni o'chirish", "Faylni o'chirish"], "a": 0}, {"q": "Ustun sarlavhalari qanday yozilishi tavsiya etiladi?", "o": ["Aniq va qalin shriftda", "Juda kichik harflarda", "Umuman yozmaslik"], "a": 0}, {"q": "Ma'lumot to'plash shakli nima uchun kerak?", "o": ["Ma'lumotlarni tartibli kiritish uchun", "Rasm chizish uchun", "Video yaratish uchun"], "a": 0}], "assess": false}, {"id": 21, "sem": 2, "title": "Elektron jadvalni formatlash", "content": "<p><b>Formatlash</b> — jadvalning tashqi ko'rinishini (rang, shrift, chegara, kataklar kengligi) sozlash.</p>\n<ol>\n<li>Katakchalarni belgilang.</li>\n<li><b>Home</b> bo'limida: shrift turi, o'lchami, qalin/qiyshiq (<i>Bold/Italic</i>), to'ldirish rangi (<i>Fill Color</i>), chegaralar (<i>Borders</i>) sozlanadi.</li>\n<li>Sonlar uchun format tanlash mumkin: valyuta, foiz, sana va h.k. (<b>Number Format</b>).</li>\n</ol>\n<p><b>Nega muhim?</b> Yaxshi formatlangan jadval ma'lumotni o'qishni osonlashtiradi va aniq ko'rsatadi.</p>", "quiz": [{"q": "Jadvalga rang berish uchun qaysi vosita ishlatiladi?", "o": ["Fill Color", "Transition", "Header"], "a": 0}, {"q": "Sonlarni foiz yoki valyuta ko'rinishida ko'rsatish uchun nima ishlatiladi?", "o": ["Number Format", "Crop", "Wrap Text"], "a": 0}, {"q": "Formatlashning asosiy maqsadi nima?", "o": ["Ma'lumotni tushunarli va chiroyli ko'rsatish", "Faylni og'irlashtirish", "Formulani o'chirish"], "a": 0}], "assess": false}, {"id": 22, "sem": 2, "title": "Elektron jadvalni baholash", "content": "<p>Jadval tayyor bo'lgach, uni <b>baholash</b> kerak — ya'ni formulalar to'g'ri ishlayaptimi, ma'lumotlar aniqmi, dizayn tushunarlimi — tekshiriladi.</p>\n<p>Baholash mezonlari:</p>\n<ul>\n<li><b>To'g'rilik</b> — formulalar xatosiz natija berяptimi?</li>\n<li><b>Tushunarlilik</b> — boshqa odam jadvalni ko'rib tushunadimi?</li>\n<li><b>Dizayn</b> — jadval chiroyli va tartibli ko'rinishdami?</li>\n</ul>\n<p>Agar xatolar topilsa, ular tuzatiladi va jadval qayta tekshiriladi.</p>", "quiz": [{"q": "Jadvalni baholashda nimaga e'tibor beriladi?", "o": ["To'g'rilik, tushunarlilik, dizayn", "Faqat rangga", "Faqat shriftga"], "a": 0}, {"q": "Agar jadvalda xato topilsa nima qilish kerak?", "o": ["E'tibor bermaslik", "Tuzatish", "Faylni o'chirish"], "a": 1}, {"q": "Jadval tushunarli bo'lishi uchun nima muhim?", "o": ["Boshqa odam ham tushuna olishi", "Faqat o'zi tushunishi", "Hech narsa muhim emas"], "a": 0}], "assess": false}, {"id": 23, "sem": 2, "title": "Elektron jadval natijalarini diagramma sifatida taqdim etish", "content": "<p><b>Diagramma (Chart)</b> — sonli ma'lumotlarni rasmiy, vizual ko'rinishda (ustunli, doiraviy, chiziqli) ko'rsatish usuli.</p>\n<ol>\n<li>Diagramma qilinadigan ma'lumotlarni belgilang.</li>\n<li><b>Insert</b> bo'limiga o'ting.</li>\n<li><b>Charts</b> guruhidan kerakli diagramma turini tanlang: <i>Column</i> (ustunli), <i>Pie</i> (doiraviy), <i>Line</i> (chiziqli).</li>\n</ol>\n<p><b>Nega kerak?</b> Diagramma orqali raqamlarni solishtirish va tushunish osonlashadi. Masalan, sinfdagi o'quvchilar bahosi taqsimotini doiraviy diagrammada ko'rsatish mumkin.</p>", "quiz": [{"q": "Diagramma nima uchun ishlatiladi?", "o": ["Ma'lumotlarni vizual ko'rsatish uchun", "Faylni o'chirish uchun", "Shriftni o'zgartirish uchun"], "a": 0}, {"q": "Doiraviy diagramma qanday ataladi?", "o": ["Pie Chart", "Column Chart", "Line Chart"], "a": 0}, {"q": "Diagramma qaysi bo'limdan qo'shiladi?", "o": ["Insert", "Review", "Layout"], "a": 0}], "assess": false}, {"id": 24, "sem": 2, "title": "Shartli formatlash va maqsadni qidirish vositalaridan foydalanish", "content": "<p><b>Shartli formatlash (Conditional Formatting)</b> — ma'lum shartga mos keladigan katakchalarni avtomatik ravishda boshqacha rangda ko'rsatish.</p>\n<p><b>Misol:</b> 60 balldan past baholarni qizil rangda, yuqori baholarni yashil rangda ko'rsatish.</p>\n<ol>\n<li>Katakchalarni belgilang.</li>\n<li><b>Home → Conditional Formatting</b> tugmasini bosing.</li>\n<li>Shartni tanlang (masalan, <i>Less Than</i> — kichik bo'lsa) va rangni belgilang.</li>\n</ol>\n<p><b>Maqsadni qidirish (Goal Seek)</b> — natija ma'lum bo'lsa-yu, unga erishish uchun qaysi qiymat kerakligini topish vositasi. <b>Data → What-If Analysis → Goal Seek</b> orqali ishlatiladi.</p>", "quiz": [{"q": "Shartli formatlash nima qiladi?", "o": ["Shartga mos katakchalarni ajratib ko'rsatadi", "Faylni o'chiradi", "Jadvalni o'chiradi"], "a": 0}, {"q": "Goal Seek vositasi nima uchun ishlatiladi?", "o": ["Kerakli natijaga erishish uchun qiymatni topish", "Rasm chizish uchun", "Faylni saqlash uchun"], "a": 0}, {"q": "Conditional Formatting qaysi bo'limda joylashgan?", "o": ["Home", "Insert", "Review"], "a": 0}], "assess": false}, {"id": 25, "sem": 2, "title": "BSB-2 [50 ball]", "content": "<p>Bu dars <b>Bo'limlar bo'yicha summativ baholash (BSB-2)</b> darsidir. Elektron jadval (Excel) bo'yicha o'rganilgan mavzular bo'yicha bilimingiz baholanadi.</p><p>Quyida qisqa takroriy test berilgan.</p>", "quiz": [{"q": "Excelda formula qaysi belgidan boshlanadi?", "o": ["=", "#", "@"], "a": 0}, {"q": "Sonli ma'lumotlarni vizual ko'rsatish usuli nima deyiladi?", "o": ["Diagramma", "Header", "Style"], "a": 0}, {"q": "Shartga mos katakchani ajratib ko'rsatish vositasi nima deyiladi?", "o": ["Conditional Formatting", "Wrap Text", "Crop"], "a": 0}, {"q": "Kerakli natijaga erishish uchun qiymat topish vositasi nima deyiladi?", "o": ["Goal Seek", "Transition", "Bullet List"], "a": 0}], "assess": true}, {"id": 26, "sem": 2, "title": "Takrorlash", "content": "<p>Bu darsda 17 — 25-darslarda o'rganilgan Excel mavzulari (jadval loyihalash, formula, modellashtirish, formatlash, diagramma, shartli formatlash) takrorlanadi.</p><p>Quyidagi testni yechib, bilimingizni mustahkamlang.</p>", "quiz": [{"q": "Jadvaldagi gorizontal qator nima deyiladi?", "o": ["Row", "Column"], "a": 0}, {"q": "=SUM(A1:A5) formulasi nima qiladi?", "o": ["Sonlarni yig'adi", "Sonlarni o'chiradi"], "a": 0}, {"q": "Doiraviy diagramma qanday nomlanadi?", "o": ["Pie Chart", "Bar Chart"], "a": 0}], "assess": false}, {"id": 27, "sem": 2, "title": "Ma'lumotlar bazasi uchun maqsadni aniqlash. Ma'lumotlar bazasi uchun maydon tanlash", "content": "<p><b>Ma'lumotlar bazasi (Database)</b> — katta hajmdagi ma'lumotlarni tartibli saqlash va boshqarish tizimi (masalan, Microsoft Access).</p>\n<p>Ma'lumotlar bazasini yaratishdan oldin:</p>\n<ol>\n<li><b>Maqsadni aniqlang</b> — bu baza nima uchun kerak? (masalan, kutubxona kitoblarini hisobga olish)</li>\n<li><b>Maydonlarni (Field) tanlang</b> — qanday ma'lumotlar saqlanadi? (masalan: kitob nomi, muallif, yili)</li>\n</ol>\n<p>Har bir maydon jadvaldagi bitta ustunga mos keladi, har bir yozuv (record) esa bitta qatorga mos keladi.</p>", "quiz": [{"q": "Ma'lumotlar bazasi nima uchun ishlatiladi?", "o": ["Katta hajmdagi ma'lumotlarni tartibli saqlash uchun", "Rasm chizish uchun", "Video ko'rish uchun"], "a": 0}, {"q": "Maydon (Field) nimaga mos keladi?", "o": ["Jadvaldagi ustunga", "Jadvaldagi qatorga", "Faylga"], "a": 0}, {"q": "Ma'lumotlar bazasini yaratishdan oldin nimani aniqlash kerak?", "o": ["Maqsad va maydonlarni", "Faqat rangni", "Faqat shriftni"], "a": 0}], "assess": false}, {"id": 28, "sem": 2, "title": "Ma'lumot turlari. Ma'lumotlar bazasi jadvalini yaratish", "content": "<p>Har bir maydonga mos <b>ma'lumot turi (Data Type)</b> belgilanadi:</p>\n<ul>\n<li><b>Short Text</b> — qisqa matn (ism, nom)</li>\n<li><b>Number</b> — son (yosh, miqdor)</li>\n<li><b>Date/Time</b> — sana va vaqt</li>\n<li><b>Currency</b> — pul miqdori</li>\n<li><b>Yes/No</b> — mantiqiy qiymat (ha/yo'q)</li>\n</ul>\n<p><b>Jadval yaratish:</b> Access dasturida <b>Create → Table</b> orqali yangi jadval ochiladi, so'ng har bir maydon nomi va turi kiritiladi.</p>", "quiz": [{"q": "Sana va vaqt uchun qaysi ma'lumot turi ishlatiladi?", "o": ["Date/Time", "Number", "Currency"], "a": 0}, {"q": "Ha/Yo'q javobi uchun qaysi tur ishlatiladi?", "o": ["Yes/No", "Short Text", "Date/Time"], "a": 0}, {"q": "Access'da yangi jadval qaysi bo'limdan yaratiladi?", "o": ["Create", "Review", "Layout"], "a": 0}], "assess": false}, {"id": 29, "sem": 2, "title": "Ochiladigan ro'yxatni yaratish. Ma'lumot kiritish formasini yaratish (Form)", "content": "<p><b>Ochiladigan ro'yxat (Dropdown list/Lookup)</b> — maydonga faqat oldindan belgilangan variantlardan birini tanlab kiritish imkonini beradi. Bu xatoliklarning oldini oladi.</p>\n<p>Yaratish uchun: jadvalda maydon turini <b>Lookup Wizard</b> ga o'zgartirib, variantlar ro'yxatini kiritish kerak.</p>\n<p><b>Forma (Form)</b> — ma'lumotlarni jadvalga emas, qulay va chiroyli oynaga kiritish imkonini beruvchi vosita.</p>\n<ol>\n<li><b>Create</b> bo'limiga o'ting.</li>\n<li><b>Form</b> tugmasini bosing.</li>\n<li>Access tanlangan jadval asosida avtomatik forma yaratadi.</li>\n</ol>", "quiz": [{"q": "Ochiladigan ro'yxat nima uchun kerak?", "o": ["Xatoliklarni kamaytirish uchun", "Rasm chizish uchun", "Faylni o'chirish uchun"], "a": 0}, {"q": "Forma (Form) nima uchun ishlatiladi?", "o": ["Ma'lumotlarni qulay kiritish uchun", "Diagramma chizish uchun", "Internetga ulanish uchun"], "a": 0}, {"q": "Ochiladigan ro'yxat qaysi vosita orqali yaratiladi?", "o": ["Lookup Wizard", "Print Preview", "Header"], "a": 0}], "assess": false}, {"id": 30, "sem": 2, "title": "Ma'lumotlar bazasini sinovdan o'tkazish. Ma'lumotlar xavfsizligi", "content": "<p>Ma'lumotlar bazasi tayyor bo'lgach, uni <b>sinovdan o'tkazish</b> kerak:</p>\n<ul>\n<li>Formaga test ma'lumotlari kiritib ko'riladi.</li>\n<li>Noto'g'ri ma'lumot kiritilganda xato xabari chiqishi tekshiriladi.</li>\n<li>Qidiruv va saralash funksiyalari tekshiriladi.</li>\n</ul>\n<p><b>Ma'lumotlar xavfsizligi</b> uchun:</p>\n<ul>\n<li>Bazaga parol qo'yish mumkin.</li>\n<li>Faylning zaxira nusxasini (backup) saqlash kerak.</li>\n<li>Faqat ishonchli shaxslarga kirish huquqi berish lozim.</li>\n</ul>", "quiz": [{"q": "Bazani sinovdan o'tkazish nima uchun kerak?", "o": ["Xatolarni aniqlash uchun", "Faylni o'chirish uchun", "Kompyuterni tezlashtirish uchun"], "a": 0}, {"q": "Ma'lumotlar xavfsizligi uchun nima qilish mumkin?", "o": ["Parol qo'yish", "Faylni ochiq qoldirish", "Hech narsa qilmaslik"], "a": 0}, {"q": "Zaxira nusxa (backup) nima uchun kerak?", "o": ["Ma'lumot yo'qolganda tiklash uchun", "Faylni kattalashtirish uchun", "Rasmni o'zgartirish uchun"], "a": 0}], "assess": false}, {"id": 31, "sem": 2, "title": "Ma'lumotlarni matn bilan ishlash dasturiga yuborish", "content": "<p>Access'dagi ma'lumotlarni <b>Word</b> dasturiga yuborib, hisobot yoki xat ko'rinishida chiqarish mumkin.</p>\n<ol>\n<li>Kerakli jadval yoki so'rovni (Query) tanlang.</li>\n<li><b>External Data</b> bo'limiga o'ting.</li>\n<li><b>Export → Word</b> variantini tanlang.</li>\n<li>Saqlash joyini belgilab, <b>OK</b> tugmasini bosing.</li>\n</ol>\n<p><b>Foydasi:</b> Ma'lumotlar bazasidagi katta hajmdagi ma'lumotlarni chiroyli hujjat ko'rinishida boshqalarga taqdim etish mumkin.</p>", "quiz": [{"q": "Ma'lumotlarni Word'ga yuborish qaysi bo'limdan amalga oshiriladi?", "o": ["External Data", "Design", "Home"], "a": 0}, {"q": "Export funksiyasi nima qiladi?", "o": ["Ma'lumotni boshqa dasturga chiqaradi", "Ma'lumotni o'chiradi", "Faylni qidiradi"], "a": 0}, {"q": "Ma'lumotlarni Word'ga yuborishning foydasi nima?", "o": ["Chiroyli hujjat ko'rinishida taqdim etish", "Kompyuterni tezlashtirish", "Internetni tezlashtirish"], "a": 0}], "assess": false}, {"id": 32, "sem": 2, "title": "Ma'lumotlarni jadval bilan ishlash dasturiga yuborish", "content": "<p>Access'dagi ma'lumotlarni <b>Excel</b> dasturiga yuborib, qo'shimcha hisob-kitob yoki diagramma yaratish mumkin.</p>\n<ol>\n<li>Kerakli jadval yoki so'rovni (Query) tanlang.</li>\n<li><b>External Data</b> bo'limiga o'ting.</li>\n<li><b>Export → Excel</b> variantini tanlang.</li>\n<li>Fayl nomi va joyini belgilab, <b>OK</b> tugmasini bosing.</li>\n</ol>\n<p><b>Foydasi:</b> Excel'ning formula va diagramma imkoniyatlaridan foydalanib, ma'lumotlarni chuqurroq tahlil qilish mumkin bo'ladi.</p>", "quiz": [{"q": "Ma'lumotlarni Excel'ga yuborish qaysi bo'limdan amalga oshiriladi?", "o": ["External Data", "Insert", "View"], "a": 0}, {"q": "Ma'lumotni Excel'ga yuborishning asosiy foydasi nima?", "o": ["Formula va diagramma bilan chuqur tahlil qilish", "Faylni o'chirish", "Internetga ulanish"], "a": 0}, {"q": "Export → Excel qanday amalga oshiriladi?", "o": ["External Data bo'limidan Export tugmasi orqali", "Faylni o'chirish orqali", "Print Preview orqali"], "a": 0}], "assess": false}, {"id": 33, "sem": 2, "title": "CHSB-2 [40 ball]", "content": "<p>Bu dars <b>Chorak summativ baholash (CHSB-2)</b> darsidir. Excel va Ma'lumotlar bazasi (Access) bo'yicha o'rganilgan barcha mavzular baholanadi.</p><p>Quyida qisqa takroriy test berilgan.</p>", "quiz": [{"q": "Ma'lumotlar bazasida ustunga mos keluvchi tushuncha nima deyiladi?", "o": ["Maydon (Field)", "Diagramma", "Stil"], "a": 0}, {"q": "Faqat belgilangan variantlardan tanlashga imkon beruvchi ro'yxat nima deyiladi?", "o": ["Ochiladigan ro'yxat", "Header", "Footer"], "a": 0}, {"q": "Ma'lumotlar bazasidan Excel'ga ma'lumot yuborish qaysi bo'limdan amalga oshiriladi?", "o": ["External Data", "Insert", "Review"], "a": 0}, {"q": "Ma'lumotlar xavfsizligini ta'minlash uchun nima qilinadi?", "o": ["Parol qo'yish va zaxira nusxa saqlash", "Faylni ochiq qoldirish", "Hech narsa qilmaslik"], "a": 0}], "assess": true}, {"id": 34, "sem": 2, "title": "Takrorlash", "content": "<p>Bu — o'quv yilining so'nggi darsi. 1 — 33-darslarda o'rganilgan barcha mavzular (Word, PowerPoint, Excel, Access) umumlashtiriladi.</p><p>Quyidagi yakuniy testni yeching va bilimingizni mustahkamlang!</p>", "quiz": [{"q": "Word'da matnga tayyor ko'rinish beruvchi vosita?", "o": ["Stil", "Diagramma"], "a": 0}, {"q": "PowerPoint'da slaydlar orasidagi effekt?", "o": ["Transition", "Field"], "a": 0}, {"q": "Excel'da hisob-kitob uchun ishlatiladigan ifoda?", "o": ["Formula", "Header"], "a": 0}, {"q": "Access'da ma'lumot turlarini belgilash nima uchun kerak?", "o": ["To'g'ri ma'lumot kiritish uchun", "Rasm chizish uchun"], "a": 0}], "assess": false}];
+
+let joriyDarsId = null;
+
+// ========= 3-QADAM: Chap menyuni (sidebar) chizish =========
+function sidebarChiz() {
+  const sidebar = document.getElementById('sidebar');
+  sidebar.innerHTML = '';
+  let oldingiSem = null;
+  DARSLAR.forEach(d => {
+    if (d.sem !== oldingiSem) {
+      const label = document.createElement('div');
+      label.className = 'sem-label';
+      label.textContent = d.sem === 1 ? "1-yarim yillik" : "2-yarim yillik";
+      sidebar.appendChild(label);
+      oldingiSem = d.sem;
+    }
+    const btn = document.createElement('button');
+    btn.className = 'dars-btn' + (d.assess ? ' assess' : '');
+    btn.textContent = d.id + "-dars. " + d.title;
+    btn.onclick = () => darsniKorsat(d.id);
+    btn.id = 'btn-dars-' + d.id;
+    sidebar.appendChild(btn);
+  });
+}
+
+// ========= 4-QADAM: Tanlangan darsni o'ng tomonda ko'rsatish =========
+function darsniKorsat(id) {
+  joriyDarsId = id;
+  const dars = DARSLAR.find(x => x.id === id);
+  if (!dars) return;
+
+  // Faol tugmani belgilash
+  document.querySelectorAll('.dars-btn').forEach(b => b.classList.remove('active'));
+  const aktivBtn = document.getElementById('btn-dars-' + id);
+  if (aktivBtn) aktivBtn.classList.add('active');
+
+  const content = document.getElementById('content');
+  let testHtml = '';
+  if (dars.quiz && dars.quiz.length > 0) {
+    let savollarHtml = '';
+    dars.quiz.forEach((s, i) => {
+      let variantlar = '';
+      s.o.forEach((variant, vi) => {
+        variantlar += `
+          <label>
+            <input type="radio" name="savol${i}" value="${vi}">
+            ${variant}
+          </label>`;
+      });
+      savollarHtml += `
+        <div class="savol">
+          <p class="q-text">${i + 1}. ${s.q}</p>
+          ${variantlar}
+        </div>`;
+    });
+    testHtml = `
+      <div class="test-blok">
+        <h3>Bilimni tekshirish testi</h3>
+        <div id="savollarKontent">${savollarHtml}</div>
+        <button class="asosiy-btn" id="tekshirBtn" onclick="javoblarniTekshir(${id})">Javoblarni tekshirish</button>
+        <div id="natijaXabar"></div>
+      </div>`;
+  }
+
+  content.innerHTML = `
+    <h2>${dars.id}-dars. ${dars.title}</h2>
+    <div class="ders-matn">${dars.content}</div>
+    ${testHtml}
+    <div class="tarix-blok">
+      <h3>Natijalar tarixi</h3>
+      <div id="tarixKontent">Yuklanmoqda...</div>
+    </div>
+  `;
+  tarixniYukla();
+}
+
+// ========= 5-QADAM: Javoblarni tekshirish va Supabase'ga saqlash =========
+async function javoblarniTekshir(darsId) {
+  const dars = DARSLAR.find(x => x.id === darsId);
+  const ismMaydon = document.getElementById('oquvchiIsm');
+  const ism = ismMaydon.value.trim();
+  const natijaXabar = document.getElementById('natijaXabar');
+  const tekshirBtn = document.getElementById('tekshirBtn');
+
+  natijaXabar.innerHTML = '';
+
+  // Bo'sh maydonlarni tekshirish: ism kiritilganmi?
+  if (ism === '') {
+    natijaXabar.innerHTML = `<div class="xato-xabar">Iltimos, avval yuqoridagi "Ismingiz" maydoniga ismingizni yozing.</div>`;
+    return;
+  }
+
+  // Barcha savollarga javob berilganmi, tekshirish
+  let togriSoni = 0;
+  for (let i = 0; i < dars.quiz.length; i++) {
+    const tanlangan = document.querySelector(`input[name="savol${i}"]:checked`);
+    if (!tanlangan) {
+      natijaXabar.innerHTML = `<div class="xato-xabar">Iltimos, barcha savollarga javob bering (${i + 1}-savol tanlanmagan).</div>`;
+      return;
+    }
+    if (parseInt(tanlangan.value, 10) === dars.quiz[i].a) {
+      togriSoni++;
+    }
+  }
+
+  const jami = dars.quiz.length;
+  const ok = togriSoni === jami;
+
+  // Natijani ekranda ko'rsatish
+  natijaXabar.innerHTML = `
+    <div class="natija-xabar ${ok ? 'natija-ok' : 'natija-yomon'}">
+      Natija: ${togriSoni} / ${jami} to'g'ri javob. ${ok ? "Barakalla! Hammasi to'g'ri." : "Yana urinib ko'ring yoki mavzuni qayta o'qing."}
+    </div>`;
+
+  // Tugmani vaqtincha o'chirish va "Yuborilmoqda..." deb yozish
+  tekshirBtn.disabled = true;
+  const eskiMatn = tekshirBtn.textContent;
+  tekshirBtn.textContent = "Yuborilmoqda...";
+
+  try {
+    if (!supabaseClient) {
+      throw new Error("Supabase ulanishi sozlanmagan. SUPABASE_URL va SUPABASE_ANON_KEY qiymatlarini tekshiring.");
+    }
+    const { error } = await vaqtChegarasiBilan(
+      supabaseClient.from('natijalar').insert([{
+        ism: ism,
+        mavzu: dars.id + "-dars. " + dars.title,
+        togri_javoblar: togriSoni,
+        jami_savollar: jami
+      }]),
+      10000 // 10 soniya kutish
+    );
+    if (error) throw error;
+    tarixniYukla();
+  } catch (e) {
+    natijaXabar.innerHTML += `<div class="xato-xabar">Natijani saqlashda xatolik: ${e.message}</div>`;
+  } finally {
+    tekshirBtn.disabled = false;
+    tekshirBtn.textContent = eskiMatn;
+  }
+}
+
+// ========= 6-QADAM: Natijalar tarixini Supabase'dan o'qib ko'rsatish =========
+async function tarixniYukla() {
+  const joy = document.getElementById('tarixKontent');
+  if (!joy) return;
+  joy.textContent = "Yuklanmoqda...";
+
+  try {
+    if (!supabaseClient) {
+      throw new Error("Supabase ulanishi sozlanmagan. SUPABASE_URL va SUPABASE_ANON_KEY qiymatlarini tekshiring.");
+    }
+    const { data, error } = await vaqtChegarasiBilan(
+      supabaseClient
+        .from('natijalar')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(20),
+      10000
+    );
+    if (error) throw error;
+
+    if (!data || data.length === 0) {
+      joy.textContent = "Hozircha yozuv yo'q";
+      return;
+    }
+
+    let jadval = `
+      <table class="tarix-jadval">
+        <tr><th>Sana</th><th>Ism</th><th>Mavzu</th><th>Natija</th></tr>`;
+    data.forEach(row => {
+      const sana = new Date(row.created_at).toLocaleString('uz-UZ');
+      jadval += `<tr>
+        <td>${sana}</td>
+        <td>${row.ism}</td>
+        <td>${row.mavzu}</td>
+        <td>${row.togri_javoblar} / ${row.jami_savollar}</td>
+      </tr>`;
+    });
+    jadval += `</table>`;
+    joy.innerHTML = jadval;
+  } catch (e) {
+    joy.innerHTML = `<div class="xato-xabar">Ma'lumotlarni yuklashda xatolik: ${e.message}</div>`;
+  }
+}
+
+// ========= 7-QADAM: Sahifa ochilganda ishga tushirish =========
+sidebarChiz();
+tarixniYukla();
+</script>
+
+</body>
+</html>
